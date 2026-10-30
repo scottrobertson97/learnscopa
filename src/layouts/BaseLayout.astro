@@ -7,12 +7,13 @@ import '@fontsource/dm-sans/latin-500.css';
 import '@fontsource/dm-sans/latin-600.css';
 import '../styles/global.css';
 import { navigation, site } from '../config/site';
-import { adsEnabled, monetization } from '../config/monetization';
+import { adsEnabled, adsenseVerificationId, monetization } from '../config/monetization';
 interface Props { title: string; description: string; article?: boolean; structuredData?: Record<string, unknown>; noindex?: boolean; allowAds?: boolean }
 const { title, description, article = false, structuredData, noindex = false, allowAds = false } = Astro.props;
 const configured = __PUBLIC_SITE_CONFIGURED__;
 const active = routePath(Astro.url.pathname);
 const canonical = absoluteUrl(active, Astro.site);
+const adsenseAccount = adsenseVerificationId();
 ---
 <!doctype html>
 <html lang="en">
@@ -22,6 +23,7 @@ const canonical = absoluteUrl(active, Astro.site);
     <meta name="theme-color" content="#244f3c" />
     <title>{title} | {site.name}</title>
     <meta name="description" content={description} />
+    {adsenseAccount && <meta name="google-adsense-account" content={adsenseAccount} />}
     {(noindex || !configured) && <meta name="robots" content="noindex, follow" />}
     {configured && <link rel="canonical" href={canonical} />}
     <link rel="icon" type="image/svg+xml" href={href("/favicon.svg")} />

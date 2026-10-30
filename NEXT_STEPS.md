@@ -2,6 +2,8 @@
 
 ## Owner follow-up
 
+- Connect the selected `learnscopa.com` domain using `CUSTOM_DOMAIN.md`, then verify the publisher tag and `/ads.txt` on that domain before requesting AdSense review. The workflow automatically builds for the Pages domain and base path.
+
 - Confirm the GitHub Actions publication at `https://scottrobertson.net/learnscopa/`. The workflow reads the origin and project path from existing Pages settings.
 - Review and approve the privacy draft, including operator identity, working privacy contact, and actual hosting practices.
 - Use the README's optional Cloudflare instructions only if choosing a different host. No affiliate ID or publisher ID is supplied by this project.

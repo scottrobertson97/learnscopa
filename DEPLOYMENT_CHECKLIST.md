@@ -4,6 +4,8 @@
 
 The configured site is **https://scottrobertson.net/learnscopa/**. Pages is already enabled with **GitHub Actions** as the source.
 
+The selected custom domain is **learnscopa.com**. Follow [CUSTOM_DOMAIN.md](CUSTOM_DOMAIN.md) for DNS and the coordinated Pages cutover; the existing workflow reads the updated domain and base path automatically. Publisher verification metadata and `public/ads.txt` are prepared for serving at the custom domain's root. Live ads remain disabled.
+
 - Push to `main`, or manually run **Check and deploy Learn Scopa** on `main`.
 - The workflow obtains the actual `SITE_URL` and `BASE_PATH` from `actions/configure-pages`.
 - The verification job runs strict checks, unit tests, a production build, and browser tests at the deployment path.

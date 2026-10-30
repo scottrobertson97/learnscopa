@@ -1,6 +1,7 @@
 import { test, expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { normalizeBase, prefixPath } from "../../src/lib/paths";
+import { adsenseVerificationId } from "../../src/config/monetization";
 const sitePath = (path: string): string =>
   prefixPath(path, process.env["BASE_PATH"] || "/");
 
@@ -119,6 +120,38 @@ test("deployment paths cover assets, active navigation, canonical URLs, and site
       );
   }
   expect(responseErrors).toEqual([]);
+});
+
+test("AdSense verification metadata loads without ad scripts or network requests", async ({
+  page,
+}) => {
+  const adRequests: string[] = [];
+  page.on("request", (request) => {
+    if (/googlesyndication\.com|doubleclick\.net/.test(request.url()))
+      adRequests.push(request.url());
+  });
+  const accountId = adsenseVerificationId();
+  const adsTxt = await page.request.get(sitePath("/ads.txt"));
+  expect(adsTxt.status()).toBe(200);
+  if (accountId)
+    expect(await adsTxt.text()).toContain(
+      `google.com, ${accountId.replace(/^ca-/, "")}, DIRECT, f08c47fec0942fa0`,
+    );
+  for (const route of [
+    "/",
+    "/learn",
+    "/rules",
+    "/articles/what-is-the-settebello",
+  ]) {
+    await page.goto(sitePath(route));
+    const meta = page.locator('meta[name="google-adsense-account"]');
+    if (accountId) await expect(meta).toHaveAttribute("content", accountId);
+    else await expect(meta).toHaveCount(0);
+    await expect(
+      page.locator('.adsbygoogle, script[src*="googlesyndication"]'),
+    ).toHaveCount(0);
+  }
+  expect(adRequests).toEqual([]);
 });
 
 test("homepage demo explains correct and incorrect captures", async ({

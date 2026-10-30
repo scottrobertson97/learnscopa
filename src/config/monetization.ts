@@ -13,18 +13,20 @@ export interface Recommendation {
   };
   affiliateUrl?: string;
 }
+export interface AdsenseConfig {
+  enabled: boolean;
+  publisherId: string;
+  verificationEnabled: boolean;
+  consentApproved: boolean;
+  placements: Record<string, string>;
+}
 export const monetization: {
   affiliate: {
     enabled: boolean;
     disclosure: string;
     products: Recommendation[];
   };
-  adsense: {
-    enabled: boolean;
-    publisherId: string;
-    consentApproved: boolean;
-    placements: Record<string, string>;
-  };
+  adsense: AdsenseConfig;
 } = {
   affiliate: {
     enabled: false,
@@ -53,7 +55,9 @@ export const monetization: {
   },
   adsense: {
     enabled: false,
-    publisherId: "",
+    publisherId: "ca-pub-2075641468239843",
+    // A verification meta tag makes no ad requests and can precede account approval.
+    verificationEnabled: true,
     consentApproved: false,
     placements: { "article-end": "", "rules-end": "" },
   },
@@ -71,13 +75,21 @@ export function affiliateLink(product: Recommendation): string | null {
     return null;
   }
 }
-export function adsEnabled(): boolean {
+export function adsenseVerificationId(
+  config: AdsenseConfig = monetization.adsense,
+): string | null {
+  return config.verificationEnabled &&
+    /^ca-pub-\d{16}$/.test(config.publisherId)
+    ? config.publisherId
+    : null;
+}
+export function adsEnabled(
+  config: AdsenseConfig = monetization.adsense,
+): boolean {
   return (
-    monetization.adsense.enabled &&
-    monetization.adsense.consentApproved &&
-    /^ca-pub-\d{16}$/.test(monetization.adsense.publisherId) &&
-    Object.values(monetization.adsense.placements).some((slot) =>
-      /^\d+$/.test(slot),
-    )
+    config.enabled &&
+    config.consentApproved &&
+    /^ca-pub-\d{16}$/.test(config.publisherId) &&
+    Object.values(config.placements).some((slot) => /^\d+$/.test(slot))
   );
 }

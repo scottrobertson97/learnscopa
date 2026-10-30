@@ -75,6 +75,8 @@ The browser suite completes all three lessons at mobile and desktop sizes, rejec
 
 The repository's Pages settings already select **GitHub Actions** and resolve the site to **https://scottrobertson.net/learnscopa/**. `.github/workflows/checks.yml` now builds, verifies, uploads, and publishes the site. It can also be run manually using **Actions → Check and deploy Learn Scopa → Run workflow** on `main`.
 
+The selected custom domain is **learnscopa.com**. Follow [the custom-domain setup](CUSTOM_DOMAIN.md) for DNS and the Pages setting. The workflow automatically uses the new origin and root path after that setting changes; until then the current project address remains in use.
+
 The `verify` job reads `origin` and `base_path` from `actions/configure-pages`, sets `SITE_URL` and `BASE_PATH`, runs the production build and browser suite at that same path, and uploads `dist` as the Pages artifact. The `deploy` job requires those checks to pass, uses the `github-pages` environment, and grants only the Pages and OIDC permissions needed to publish. Pull requests do not upload or deploy a Pages artifact. No external hosting token is required.
 
 All navigation, original static assets, Markdown article links, tutorial completion links, canonical/social metadata, and sitemap entries honor `BASE_PATH`. Local development and an optional Cloudflare deployment continue to work at `/`. Directory links have trailing slashes for static hosts.
@@ -119,6 +121,10 @@ Edit `src/config/monetization.ts`. Recommendations start as **deck categories**,
 The owner must supply the real account and links. This source does not fabricate either. The optional `image` field supports `src`, `alt`, `width`, `height`, and a visible `licenseNote`; provide it only with suitable usage rights. The initial recommendations use text rather than unlicensed product images.
 
 ## AdSense: prepared, disabled
+
+Start with [the account and domain setup guide](ADSENSE_SETUP.md). The intended AdSense site is `learnscopa.com`, with verification metadata and `ads.txt` served from this repository at the custom domain's root. No portfolio repository changes are needed.
+
+Verification can precede ad serving: the owner-supplied `ca-pub-2075641468239843` is configured with `verificationEnabled: true`. `enabled` and `consentApproved` remain false. This meta tag makes no advertising requests. `public/ads.txt` contains the matching seller record for the custom domain. An ID is not an approval.
 
 `adsense.enabled`, a valid `ca-pub-` ID, `consentApproved`, and a real slot ID are **all** required to render an ad. By default there is no ad script, request, empty reserved ad area, or consent banner. The existing placements are `rules-end` and `article-end`, outside exercises. Enabled areas reserve 280px to reduce layout shift; real ad behavior still needs host/device testing.
 
