@@ -1,0 +1,26 @@
+---
+import Card from './cards/Card.astro';
+import { card } from '../lib/scopa/deck';
+---
+<div class="demo-table" data-capture-demo>
+  <p class="eyebrow">Your first move</p>
+  <div class="demo-cards" role="group" aria-label="Table cards: choose what your five captures"><Card card={card('cups', 5)} interactive /><Card card={card('clubs', 3)} interactive /><Card card={card('swords', 2)} interactive /></div>
+  <div class="demo-bottom"><Card card={card('coins', 5)} /><p>You’re playing a <strong>5</strong>.<br />Tap the table card it captures.</p></div>
+  <p class="demo-feedback" role="status" aria-live="polite">A little hint: look for a match.</p>
+</div>
+<script>
+  import { card } from '../lib/scopa/deck';
+  import { isLegalCapture } from '../lib/scopa/captures';
+  const demo = document.querySelector<HTMLElement>('[data-capture-demo]');
+  if (demo) {
+    const table = [card('cups', 5), card('clubs', 3), card('swords', 2)];
+    for (const button of demo.querySelectorAll<HTMLButtonElement>('[data-card-id]')) {
+      button.addEventListener('click', () => {
+        const correct = isLegalCapture(card('coins', 5), table, [button.dataset.cardId!]);
+        for (const b of demo.querySelectorAll('[data-card-id]')) { b.classList.remove('is-selected'); b.setAttribute('aria-pressed', 'false'); }
+        button.classList.add('is-selected'); button.setAttribute('aria-pressed', 'true');
+        demo.querySelector('[role="status"]')!.textContent = correct ? 'Perfetto! A 5 takes the 5. A single match always comes before a sum.' : 'Try the 5. When a single card matches, you must take that card first.';
+      });
+    }
+  }
+</script>

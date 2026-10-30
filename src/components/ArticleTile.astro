@@ -1,0 +1,14 @@
+---
+import Card from './cards/Card.astro';
+import { card } from '../lib/scopa/deck';
+import type { CollectionEntry } from 'astro:content';
+interface Props { article: CollectionEntry<'articles'>; index?: number }
+const { article, index = 0 } = Astro.props;
+const suits = ['coins', 'cups', 'swords', 'clubs'] as const;
+const settebello = article.id === 'what-is-the-settebello';
+---
+<a class="article-tile" href={`/articles/${article.id}`}>
+  <div class="article-visual" aria-hidden="true"><Card card={card(settebello ? 'coins' : suits[index % 4]!, settebello || index === 0 ? 7 : 1)} />{index !== 0 && !settebello && <Card card={card(suits[(index + 1) % 4]!, index === 1 ? 10 : 6)} />}</div>
+  <p class="eyebrow">{article.data.category} · {article.data.readingMinutes} min read</p>
+  <h3>{article.data.title}</h3><p>{article.data.description}</p><span class="read-link">Read the story <span aria-hidden="true">↗</span></span>
+</a>

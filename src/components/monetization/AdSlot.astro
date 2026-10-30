@@ -1,0 +1,14 @@
+---
+import { adsEnabled, monetization } from '../../config/monetization';
+interface Props { placement: string }
+const slot = monetization.adsense.placements[Astro.props.placement];
+const enabled = adsEnabled() && slot && /^\d+$/.test(slot);
+---
+{enabled && <aside class="ad-slot" aria-label="Advertisement"><span class="eyebrow">Advertisement</span><ins class="adsbygoogle" style="display:block" data-ad-client={monetization.adsense.publisherId} data-ad-slot={slot} data-ad-format="auto" data-full-width-responsive="true"></ins></aside>}
+{enabled && <script is:inline>
+  // Activation also requires a real, owner-reviewed CMP; see README before enabling.
+  var pending = document.querySelectorAll('.adsbygoogle:not([data-adsbygoogle-status])');
+  for (const _slot of pending) {
+    (window.adsbygoogle = window.adsbygoogle || []).push({});
+  }
+</script>}

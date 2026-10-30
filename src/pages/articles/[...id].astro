@@ -1,0 +1,23 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import AdSlot from '../../components/monetization/AdSlot.astro';
+export async function getStaticPaths() {
+  return (await getCollection('articles')).map(article => ({ params: { id: article.id }, props: { article } }));
+}
+interface Props { article: CollectionEntry<'articles'> }
+const { article } = Astro.props;
+const { Content } = await render(article);
+const all = await getCollection('articles');
+const related = all.filter(a => article.data.related.includes(a.id));
+const structuredData = {
+  '@context': 'https://schema.org', '@type': 'Article',
+  headline: article.data.title, description: article.data.description, inLanguage: 'en',
+  author: { '@type': 'Organization', name: 'Learn Scopa' },
+  ...(__PUBLIC_SITE_CONFIGURED__ ? { mainEntityOfPage: new URL(Astro.url.pathname, Astro.site).href, image: new URL('/images/social-card.png', Astro.site).href } : {}),
+};
+---
+<BaseLayout title={article.data.title} description={article.data.description} article structuredData={structuredData} allowAds>
+  <header class="guide-header container"><div class="article-header"><a class="breadcrumb" href="/articles">Field notes <span aria-hidden="true">/</span></a><p class="eyebrow">{article.data.category}</p><h1>{article.data.title}<span class="text-terracotta">.</span></h1><p class="lede">{article.data.description}</p><div class="article-meta"><span>By Learn Scopa</span><span>{article.data.readingMinutes} minute read</span></div></div></header>
+  <div class="article-body container"><article class="prose"><Content /></article><AdSlot placement="article-end" /><aside class="related-reading" aria-label="Related reading"><p class="eyebrow">Keep the conversation going</p>{related.map(a => <a href={`/articles/${a.id}`}>{a.data.title} <span aria-hidden="true">→</span></a>)}<a href="/learn">Try the interactive lessons <span aria-hidden="true">↗</span></a></aside></div>
+</BaseLayout>

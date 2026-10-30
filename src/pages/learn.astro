@@ -1,0 +1,8 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Tutorial from '../components/tutorial/Tutorial.astro';
+---
+<BaseLayout title="Learn to play Scopa: interactive lessons" description="Learn Scopa by doing. Meet the cards, practice legal captures, and count a winning deal in three free, keyboard-accessible lessons.">
+  <header class="tutorial-header container"><div><p class="eyebrow">Your seat at the practice table</p><h1>Let’s learn Scopa<span class="text-terracotta">.</span></h1><p>One idea. One move. A little more confidence.</p></div><button type="button" class="restart-button" data-restart>↺ Restart all lessons</button></header>
+  <Tutorial />
+</BaseLayout>

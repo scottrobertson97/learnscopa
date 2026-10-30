@@ -1,0 +1,49 @@
+---
+import GuideLayout from '../layouts/GuideLayout.astro';
+import Card from '../components/cards/Card.astro';
+import AdSlot from '../components/monetization/AdSlot.astro';
+import { card } from '../lib/scopa/deck';
+---
+<GuideLayout title="The rules of Scopa" description="The complete two-player Scopa rules: dealing, mandatory captures, single-card precedence, sweeps, leftovers, scoring, and playing to 11." intro="A small deck, a shared table, and a few rules that soon feel natural. Here’s everything you need for your first two-player game.">
+  <h2>Before you pull up a chair</h2>
+  <p>You need two players, a place for a row of face-up cards, and a 40-card Italian deck. A paper score sheet helps. Scopa also works with four players in two partnerships; this guide and our lessons use the traditional <strong>two-player game</strong>.</p>
+  <p>Each suit contains Ace, 2, 3, 4, 5, 6, 7, Fante, Cavallo, and Re. Their capturing values are 1 through 10 in that order. The Latin suits are coins, cups, swords, and clubs. No suit is trump. If you only have a regular deck, <a href="/articles/playing-scopa-with-a-regular-deck">remove its 8s, 9s, and 10s</a> and use Jack = 8, Queen = 9, King = 10.</p>
+  <div class="card-example"><Card card={card('coins', 1)} /><Card card={card('clubs', 8)} /><Card card={card('swords', 9)} /><Card card={card('cups', 10)} /><div class="example-copy"><p><strong>Ace = 1 · Fante = 8<br />Cavallo = 9 · Re = 10</strong><br />These are capturing values. Primiera has its own scale.</p></div></div>
+  <h2 id="setup">Set the table</h2>
+  <ol><li>Choose a dealer. The dealer shuffles, and the other player cuts.</li><li>Deal three cards to each player, one at a time, starting with the non-dealer.</li><li>Place the next four cards face up in the middle. Keep the remaining deck face down as the stock.</li><li>The non-dealer plays first. Players then alternate turns.</li></ol>
+  <p>If the opening four table cards contain <strong>three or four kings</strong>, gather all the cards, shuffle, and redeal with the same dealer. That opening prevents ordinary sweeps.</p>
+  <h2 id="turn">One turn, one card</h2>
+  <p>Choose one card from your hand and play it face up. That card either captures from the table or joins the table. Capturing means taking the selected table cards <strong>and the card you played</strong> into your own face-down pile. Keep captured cards separate from your hand.</p>
+  <h3>1. Look for a single match first</h3>
+  <p>If a table card has the same capturing value as your played card, you must take one such card. Suits do not need to match. A five of coins takes a five of cups just as easily as a five of swords.</p>
+  <p>If there are two matching cards, choose either one. You take <strong>one</strong>, not both.</p>
+  <h3>2. If there is no match, look for a sum</h3>
+  <p>Only when no single table card matches may you capture two or more cards whose values add up to your played card. A seven might take a four and a three, or an ace, a two, and a four. If several groups work, choose one entire legal group.</p>
+  <div class="card-example"><Card card={card('coins', 7)} /><span class="example-symbol" aria-hidden="true">→</span><Card card={card('cups', 4)} /><span class="example-symbol" aria-hidden="true">+</span><Card card={card('clubs', 3)} /><div class="example-copy"><p><strong>7 captures 4 + 3.</strong><br />This is legal when there is no single 7 on the table.</p></div></div>
+  <div class="callout"><p><strong>A match comes before math.</strong> With 5, 3, and 2 on the table, your five must take the single five. Taking 3 + 2 would be illegal, even though the sum is right.</p></div>
+  <h3>3. A possible capture is mandatory</h3>
+  <p>You choose which card to play from your hand. Once you play it, you must make a legal capture if one exists. You cannot leave that card on the table simply because you prefer to save the available cards for later.</p>
+  <h3>4. No capture? Leave your card</h3>
+  <p>If neither a single match nor a valid sum exists, your card stays face up alongside the other table cards. The next player can capture it. Playing to an empty table always leaves your card there in the reference rules.</p>
+  <h2 id="sweep">Scopa! Sweep the table</h2>
+  <p>A legal capture that leaves no face-up cards on the table earns a <strong>scopa</strong>: one sweep point. It can be a single match or a combination. Traditionally, players turn one card sideways in their capture pile to record each sweep. You can also mark sweeps on paper.</p>
+  <p>There is one exception: <strong>the final play of the entire deal never scores a sweep</strong>. The last card in an earlier three-card hand can still score a sweep, because more cards remain to be dealt.</p>
+  <p>After a sweep, the next player leaves a card on the empty table. The table then grows naturally through play; do not add four new cards from the stock.</p>
+  <h2 id="redeal">Three more cards, same table</h2>
+  <p>When both players have used their three cards, the dealer gives each player three more from the stock, again beginning with the non-dealer. Leave the existing face-up table cards where they are. The non-dealer starts the next hand.</p>
+  <p>Continue until the stock is empty and every hand card has been played. In a two-player deal, each player ultimately plays 18 cards; the other four were the initial table.</p>
+  <h2 id="ending">Who takes the leftovers?</h2>
+  <p>Remember who made the most recent capture. After the last turn, <strong>that player takes any cards still on the table</strong>. It is the last player to capture, which is not necessarily the player who made the last play. This collection is not a sweep and earns no extra sweep point.</p>
+  <p>Now the full 40-card deck is split between the two capture piles. Count the deal, add the points to the running score, and pass the dealer’s role to the other player.</p>
+  <h2 id="scoring">Five ways to earn points</h2>
+  <table><caption>Standard scoring for each completed deal</caption><thead><tr><th scope="col">Category</th><th scope="col">Point awarded for</th></tr></thead><tbody><tr><th scope="row">Most cards</th><td>1 point for the larger capture pile; no point on a tie.</td></tr><tr><th scope="row">Most coins</th><td>1 point for more captured coins; no point on a tie.</td></tr><tr><th scope="row">Settebello</th><td>1 point for capturing the seven of coins.</td></tr><tr><th scope="row">Primiera</th><td>1 point for the best qualified four-suit prime; no point on a tie.</td></tr><tr><th scope="row">Sweeps</th><td>1 point for each valid scopa.</td></tr></tbody></table>
+  <p>For primiera, choose your best card in each suit using the special values: 7 = 21, 6 = 18, Ace = 16, 5 = 15, 4 = 14, 3 = 13, 2 = 12, and each court card = 10. Add the four values. You must have at least one card from every suit to qualify. <a href="/scoring">See the full primiera table and a worked deal.</a></p>
+  <h2 id="winning">First to eleven</h2>
+  <p>Keep playing deals until at least one player has <strong>11 or more total points after scoring a deal</strong>. The higher score wins. If both players reach the target and tie, play another deal to break the tie. Do not stop midway through a deal under these rules.</p>
+  <h2>Easy mistakes to leave behind</h2>
+  <ul><li><strong>Taking a sum when a single match exists.</strong> Check for a matching value before adding.</li><li><strong>Taking every equal card.</strong> A six captures just one matching six.</li><li><strong>Leaving out your played card.</strong> It belongs in the capture pile too.</li><li><strong>Dealing more table cards between hands.</strong> Only the opening deal gets four.</li><li><strong>Giving leftovers to the last player.</strong> They belong to the last capturer.</li><li><strong>Counting a king as best for primiera.</strong> Sevens are best; court cards are lowest.</li><li><strong>Awarding a category point on a tie.</strong> Most cards, most coins, and primiera can go unawarded.</li></ul>
+  <h2>A note on family rules</h2>
+  <p>Scopa has many regional and household variations. Ace-takes-all, extra points for the king of coins, and coin sequences called napola are examples of additions; they are <strong>not enabled</strong> in these lessons. Agree on variations and a target score before shuffling. A familiar family rule can be valid at that table without being part of this reference game.</p>
+  <p class="small">Rules reference: <a href="https://www.pagat.com/fishing/scopa.html">Pagat’s Scopa guide</a>. Our explanations and illustrations are original. Regional deck artwork differs from our teaching deck.</p>
+  <a class="button" href="/learn">Try the rules at the practice table <span aria-hidden="true">→</span></a><AdSlot placement="rules-end" />
+</GuideLayout>

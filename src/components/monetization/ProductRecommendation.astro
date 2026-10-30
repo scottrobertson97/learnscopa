@@ -1,0 +1,14 @@
+---
+import { affiliateLink, monetization, type Recommendation } from '../../config/monetization';
+interface Props { product: Recommendation }
+const { product } = Astro.props;
+const url = affiliateLink(product);
+---
+<article class="product-recommendation">
+  {product.image && <figure><img src={product.image.src} alt={product.image.alt} width={product.image.width} height={product.image.height} loading="lazy" /><figcaption class="small">{product.image.licenseNote}</figcaption></figure>}
+  <p class="eyebrow">{product.deckType}</p>
+  <h3>{product.name}</h3>
+  <p>{product.description}</p>
+  <p class="small"><strong>Why choose it?</strong> {product.usefulness}</p>
+  {url && <><p class="disclosure">{monetization.affiliate.disclosure}</p><a class="button button-outline" href={url} rel="sponsored nofollow noopener" target="_blank">View on Amazon <span aria-hidden="true">↗</span><span class="sr-only"> (opens in a new tab)</span></a></>}
+</article>

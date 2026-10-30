@@ -1,0 +1,10 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArticleTile from '../../components/ArticleTile.astro';
+import { getCollection } from 'astro:content';
+const articles = (await getCollection('articles')).sort((a, b) => a.data.order - b.data.order);
+---
+<BaseLayout title="Field notes: Scopa guides & stories" description="Original Scopa field notes: beginner rules, settebello, simple strategy, regional Italian cards, and playing with a regular deck.">
+  <header class="guide-header container"><a class="breadcrumb" href="/">Home /</a><p class="eyebrow">Notes from the table</p><h1>A good hand of stories<span class="text-terracotta">.</span></h1><p class="lede">A little context, a useful tip, and a few things to bring to your next game.</p></header>
+  <section class="section container" aria-label="All articles"><div class="article-grid">{articles.map((article, index) => <ArticleTile article={article} index={index} />)}</div></section>
+</BaseLayout>
