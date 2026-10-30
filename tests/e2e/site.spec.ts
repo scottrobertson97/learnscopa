@@ -99,6 +99,17 @@ test("card recommendations disclose paid links and use the owner's Amazon tracki
     await expect(link).toHaveAttribute("href", `https://www.amazon.com/dp/${expectedAsins[index]}?tag=learnscopa-20`);
     await expect(link).toHaveAttribute("rel", "sponsored nofollow noopener");
     await expect(link).toHaveAttribute("target", "_blank");
+    const colors = await link.evaluate(element => {
+      let surface: Element | null = element;
+      while (surface && getComputedStyle(surface).backgroundColor === "rgba(0, 0, 0, 0)") {
+        surface = surface.parentElement;
+      }
+      return {
+        text: getComputedStyle(element).color,
+        background: surface ? getComputedStyle(surface).backgroundColor : "rgb(255, 255, 255)",
+      };
+    });
+    expect(colors.text, "The shopping link label must remain visible on its surface").not.toBe(colors.background);
   }
   await expect(page.locator("footer .disclosure")).toHaveText(
     "As an Amazon Associate I earn from qualifying purchases.",

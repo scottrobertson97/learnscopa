@@ -13,7 +13,7 @@ Verified locally on October 29–30, 2026, on Windows using Node 26.3.0. GitHub 
 | Tutorial | All 22 steps completed at 390px and 1280px; wrong answers rejected; Back, keyboard selection, restart, and completion verified |
 | Local progress | Opt-in behavior, resume, deletion, corrupt data, and blocked storage verified |
 | Content and navigation | All 13 content routes and their internal destination URLs returned 200; unique titles/descriptions; Article JSON-LD verified |
-| Amazon affiliate links | Two checked deck listings on `/cards/`, both tagged `learnscopa-20`, with adjacent paid-link disclosures, footer disclosure, new-tab notice, and sponsored/nofollow/noopener attributes; no Amazon requests before following a shopping link |
+| Amazon affiliate links | Two checked deck listings on `/cards/`, both tagged `learnscopa-20`, with adjacent paid-link disclosures, footer disclosure, new-tab notice, and sponsored/nofollow/noopener attributes; no Amazon requests before following a shopping link; button labels checked against the surrounding background |
 | Display advertising | No ad slots or advertising scripts in generated pages; AdSense serving remains disabled |
 | AdSense verification | Supplied publisher ID appears in metadata; matching ads.txt record is present; no advertising requests are made |
 | Configured-origin build | Canonical/social image URLs, 13 sitemap entries, assets, Markdown links, and active navigation verified with the actual Pages origin and `/learnscopa/` path |

@@ -832,6 +832,9 @@
     color: var(--cream);
     margin-top: 15px;
   }
+  .prose .button-outline {
+    color: var(--green);
+  }
   .prose table,
   .score-table {
     border-collapse: collapse;
