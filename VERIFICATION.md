@@ -1,6 +1,6 @@
 # MVP verification
 
-Verified locally on October 29–30, 2026, on Windows using Node 26.3.0. GitHub Actions uses Node 24 LTS. The current publication target is GitHub Pages at `https://scottrobertson.net/learnscopa/`, with `learnscopa.com` selected for a future DNS/Pages cutover. Cloudflare Pages remains an alternative.
+Verified locally on October 29–30, 2026, on Windows using Node 26.3.0. GitHub Actions uses Node 24 LTS. The live publication is GitHub Pages at `https://learnscopa.com/`, with HTTPS enforced. Cloudflare Pages remains an alternative.
 
 | Check | Result |
 | --- | --- |
@@ -23,4 +23,8 @@ Run `npm run verify` to reproduce the source check, unit tests, build, and brows
 
 The [original remote verification run](https://github.com/scottrobertson97/learnscopa/actions/runs/40988961655) passed. That workflow initially ran checks only. It now includes an artifact upload and a dependent GitHub Pages deployment job; the Actions environment records the publication result for each subsequent commit.
 
-The browser suite tests Chromium, not every browser engine. Automated accessibility scans do not replace a human screen-reader and real-device review. The owner supplied a real publisher ID for verification. Live advertising remains untested and disabled because site approval, ad slot IDs, the real consent integration, and privacy review are outstanding. The privacy page remains explicitly an owner-review draft. See `ADSENSE_SETUP.md`, `CUSTOM_DOMAIN.md`, and `DEPLOYMENT_CHECKLIST.md` for the remaining owner actions.
+The [custom-domain deployment](https://github.com/scottrobertson97/learnscopa/actions/runs/41137276095) passed on its second attempt after HTTPS was enabled. Live checks confirmed root-path pages/assets, a tutorial capture, custom-domain canonical/social/sitemap URLs, the publisher meta tag, root ads.txt, and redirects from `www` and the former project URL.
+
+On October 30, 2026, Google verified `learnscopa.com` ownership using the published meta tag and accepted the site-review request. The site detail status was **Getting ready**, with **Review requested**. Approval is pending. The matching root ads.txt was publicly accessible even though AdSense's initial separate crawl showed **Not found**.
+
+The browser suite tests Chromium, not every browser engine. Automated accessibility scans do not replace a human screen-reader and real-device review. Live advertising remains untested and disabled because site approval, ad slot IDs, the real consent integration, and privacy review are outstanding. The privacy page remains explicitly an owner-review draft. See `ADSENSE_SETUP.md`, `CUSTOM_DOMAIN.md`, and `DEPLOYMENT_CHECKLIST.md` for the remaining owner actions.

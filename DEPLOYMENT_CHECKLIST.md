@@ -2,19 +2,19 @@
 
 ## GitHub Pages through Actions
 
-The configured site is **https://scottrobertson.net/learnscopa/**. Pages is already enabled with **GitHub Actions** as the source.
+The live site is **https://learnscopa.com/** with HTTPS enforced. Pages uses **GitHub Actions** as the source.
 
-The selected custom domain is **learnscopa.com**. Follow [CUSTOM_DOMAIN.md](CUSTOM_DOMAIN.md) for DNS and the coordinated Pages cutover; the existing workflow reads the updated domain and base path automatically. Publisher verification metadata and `public/ads.txt` are prepared for serving at the custom domain's root. Live ads remain disabled.
+The custom-domain cutover is complete; [CUSTOM_DOMAIN.md](CUSTOM_DOMAIN.md) records the setup. The workflow reads the domain and base path automatically. Publisher verification metadata and `/ads.txt` are live. Google verified ownership and site review was requested on October 30, 2026. Live ads remain disabled pending approval and privacy/consent setup; see [ADSENSE_SETUP.md](ADSENSE_SETUP.md).
 
 - Push to `main`, or manually run **Check and deploy Learn Scopa** on `main`.
 - The workflow obtains the actual `SITE_URL` and `BASE_PATH` from `actions/configure-pages`.
 - The verification job runs strict checks, unit tests, a production build, and browser tests at the deployment path.
 - Only a verified `dist` artifact can reach the `deploy` job and `github-pages` environment.
 - Pull requests run verification without publishing. Publishing uses the repository's `GITHUB_TOKEN`/OIDC, with no external host token.
-- Confirm both jobs pass and inspect the environment URL. Check `/learnscopa/learn/`, an article, assets, navigation, and sitemap on the live host.
+- Confirm both jobs pass and inspect the environment URL. Check `/learn/`, an article, assets, navigation, and sitemap on the live host.
 - Review the privacy draft and provide owner/operator contact information. Affiliate links and ads remain disabled.
 
-The shared domain's root site owns root-level crawl settings. GitHub Pages does not interpret the Cloudflare `_headers` file. No custom domain or other project settings are changed by this workflow.
+The custom domain serves this project's `/robots.txt` and `/ads.txt` at its root. GitHub Pages does not interpret the Cloudflare `_headers` file. No custom domain or other project settings are changed by this workflow.
 
 ## Optional Cloudflare Pages
 

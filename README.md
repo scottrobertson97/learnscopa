@@ -73,9 +73,9 @@ The browser suite completes all three lessons at mobile and desktop sizes, rejec
 
 ## GitHub Pages deployment through Actions
 
-The repository's Pages settings already select **GitHub Actions** and resolve the site to **https://scottrobertson.net/learnscopa/**. `.github/workflows/checks.yml` now builds, verifies, uploads, and publishes the site. It can also be run manually using **Actions → Check and deploy Learn Scopa → Run workflow** on `main`.
+The repository's Pages settings select **GitHub Actions** and publish to **https://learnscopa.com/** with HTTPS enforced. `.github/workflows/checks.yml` builds, verifies, uploads, and publishes the site. It can also be run manually using **Actions → Check and deploy Learn Scopa → Run workflow** on `main`.
 
-The selected custom domain is **learnscopa.com**. Follow [the custom-domain setup](CUSTOM_DOMAIN.md) for DNS and the Pages setting. The workflow automatically uses the new origin and root path after that setting changes; until then the current project address remains in use.
+The **learnscopa.com** custom-domain cutover is complete. [The custom-domain guide](CUSTOM_DOMAIN.md) records DNS and Pages settings. The workflow automatically reads the origin and root path; `www` and the former project address redirect to the apex domain.
 
 The `verify` job reads `origin` and `base_path` from `actions/configure-pages`, sets `SITE_URL` and `BASE_PATH`, runs the production build and browser suite at that same path, and uploads `dist` as the Pages artifact. The `deploy` job requires those checks to pass, uses the `github-pages` environment, and grants only the Pages and OIDC permissions needed to publish. Pull requests do not upload or deploy a Pages artifact. No external hosting token is required.
 
@@ -93,7 +93,7 @@ npm run preview
 
 Open [the local project preview](http://127.0.0.1:4321/learnscopa/). Clear those process environment variables for root-path development. If the Pages domain or repository path changes, the next Actions build reads the updated Pages settings automatically. Do not add a project `CNAME` that changes the account's existing domain.
 
-GitHub Pages does not apply Cloudflare's `_headers` file. A project's `/learnscopa/robots.txt` also does not replace the domain-root `/robots.txt`; root-wide crawl settings belong to the domain's root site. The project publishes its sitemap URL in page metadata, and the sitemap contains the correct project paths.
+GitHub Pages does not apply Cloudflare's `_headers` file. At the custom domain, this project's `robots.txt`, sitemap, and `ads.txt` are served at the domain root. When rehearsing a project-prefix deployment, its `/learnscopa/robots.txt` does not replace a shared host's root `/robots.txt`.
 
 ## Optional Cloudflare Pages deployment
 
@@ -122,7 +122,7 @@ The owner must supply the real account and links. This source does not fabricate
 
 ## AdSense: prepared, disabled
 
-Start with [the account and domain setup guide](ADSENSE_SETUP.md). The intended AdSense site is `learnscopa.com`, with verification metadata and `ads.txt` served from this repository at the custom domain's root. No portfolio repository changes are needed.
+See [the account setup guide](ADSENSE_SETUP.md). `learnscopa.com` is added and ownership verified in AdSense; site review was requested on October 30, 2026 and showed **Getting ready**. Verification metadata and `ads.txt` are live at the custom domain's root. Google approval and the privacy/consent setup are still outstanding.
 
 Verification can precede ad serving: the owner-supplied `ca-pub-2075641468239843` is configured with `verificationEnabled: true`. `enabled` and `consentApproved` remain false. This meta tag makes no advertising requests. `public/ads.txt` contains the matching seller record for the custom domain. An ID is not an approval.
 

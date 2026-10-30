@@ -2,11 +2,10 @@
 
 ## Owner follow-up
 
-- Connect the selected `learnscopa.com` domain using `CUSTOM_DOMAIN.md`, then verify the publisher tag and `/ads.txt` on that domain before requesting AdSense review. The workflow automatically builds for the Pages domain and base path.
-
-- Confirm the GitHub Actions publication at `https://scottrobertson.net/learnscopa/`. The workflow reads the origin and project path from existing Pages settings.
+- Check Google's pending AdSense site review for `learnscopa.com`. The domain is live, ownership is verified, and review was requested on October 30, 2026. Complete real ad units and consent management before enabling ads; see `ADSENSE_SETUP.md`.
+- Future pushes deploy through GitHub Actions to `https://learnscopa.com/`. The workflow reads the origin and root path from Pages settings.
 - Review and approve the privacy draft, including operator identity, working privacy contact, and actual hosting practices.
-- Use the README's optional Cloudflare instructions only if choosing a different host. No affiliate ID or publisher ID is supplied by this project.
+- Use the README's optional Cloudflare instructions only if choosing a different host. The owner-supplied AdSense publisher ID is configured; affiliate links remain unconfigured.
 - Perform a real-device and screen-reader review, then verify direct routes, metadata, response headers, and tutorial completion on the deployed host.
 - Enable monetization only after obtaining the real accounts, checked product links, publisher approvals, and any required consent integration. See README.
 

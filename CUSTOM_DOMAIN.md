@@ -1,6 +1,6 @@
 # Connect learnscopa.com
 
-Target: **https://learnscopa.com/**, hosted from this repository with GitHub Pages. Until the domain is connected, the working site remains [scottrobertson.net/learnscopa/](https://scottrobertson.net/learnscopa/). The domain returned NXDOMAIN through a public DNS resolver when checked on October 30, 2026; this alone does not establish its registration status.
+Live: **https://learnscopa.com/**, hosted from this repository with GitHub Pages. DNS, the Pages custom-domain setting, the certificate for apex and `www`, HTTPS enforcement, and the root-path rebuild were verified on October 30, 2026. `www` and the old project URL redirect to the apex domain. The records and steps below document the completed setup.
 
 ## DNS records
 
