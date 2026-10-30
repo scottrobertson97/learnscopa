@@ -18,7 +18,7 @@ npm run build
 npm run preview
 ```
 
-Without a configured public origin, builds are deliberately **noindex**, robots disallows indexing, and the sitemap uses `http://localhost:4321`. No production domain is invented. Set `SITE_URL` to the real HTTPS origin before a public launch. Copy `.env.example` to `.env` for local configuration; `.env` is ignored by Git. `CF_PAGES_URL` is also supported when Cloudflare supplies the actual deployment URL. An explicit `SITE_URL` takes precedence.
+Without a configured public origin, builds are deliberately **noindex**, robots disallows indexing, and the sitemap uses `http://localhost:4321`. Set `SITE_URL` to the real HTTPS origin and `BASE_PATH` to the hosting path (`/` by default). Copy `.env.example` to `.env` for local configuration; `.env` is ignored by Git. `CF_PAGES_URL` is also supported for Cloudflare. The GitHub Actions workflow obtains the real origin and base path automatically from the repository's existing Pages settings.
 
 ## What is implemented
 
@@ -67,18 +67,40 @@ npx playwright install chromium
 npm run test:e2e
 ```
 
-`npm run verify` runs the check, unit tests, build, and browser suite in order. Playwright starts an Astro preview on strict port 4321 when needed. On Linux CI, install the browser's OS dependencies with `npx playwright install --with-deps chromium`. A GitHub Actions check is included; it does not deploy or push code.
+`npm run verify` runs the check, unit tests, build, and browser suite in order. Playwright starts an Astro preview on strict port 4321 when needed. On Linux CI, install the browser's OS dependencies with `npx playwright install --with-deps chromium`. GitHub Actions runs these checks and deploys the verified artifact on pushes to `main`; pull requests run checks without publishing.
 
 The browser suite completes all three lessons at mobile and desktop sizes, rejects an illegal sum, uses keyboard selection, verifies persistence/removal/restart and blocked/corrupt storage, checks internal links and inactive monetization, scans WCAG A/AA rules with axe, and checks layouts at 320, 390, 768, and 1440 pixels. Screenshots and traces go into ignored `test-results/`; reports into `playwright-report/`. Automated scans supplement human keyboard, screen-reader, and device review; they are not a certification of accessibility.
 
-## Deploy to Cloudflare Pages
+## GitHub Pages deployment through Actions
+
+The repository's Pages settings already select **GitHub Actions** and resolve the site to **https://scottrobertson.net/learnscopa/**. `.github/workflows/checks.yml` now builds, verifies, uploads, and publishes the site. It can also be run manually using **Actions → Check and deploy Learn Scopa → Run workflow** on `main`.
+
+The `verify` job reads `origin` and `base_path` from `actions/configure-pages`, sets `SITE_URL` and `BASE_PATH`, runs the production build and browser suite at that same path, and uploads `dist` as the Pages artifact. The `deploy` job requires those checks to pass, uses the `github-pages` environment, and grants only the Pages and OIDC permissions needed to publish. Pull requests do not upload or deploy a Pages artifact. No external hosting token is required.
+
+All navigation, original static assets, Markdown article links, tutorial completion links, canonical/social metadata, and sitemap entries honor `BASE_PATH`. Local development and an optional Cloudflare deployment continue to work at `/`. Directory links have trailing slashes for static hosts.
+
+To reproduce the project-path deployment locally in PowerShell:
+
+```powershell
+$env:SITE_URL = 'https://scottrobertson.net'
+$env:BASE_PATH = '/learnscopa/'
+npm run build:production
+npm run test:e2e
+npm run preview
+```
+
+Open [the local project preview](http://127.0.0.1:4321/learnscopa/). Clear those process environment variables for root-path development. If the Pages domain or repository path changes, the next Actions build reads the updated Pages settings automatically. Do not add a project `CNAME` that changes the account's existing domain.
+
+GitHub Pages does not apply Cloudflare's `_headers` file. A project's `/learnscopa/robots.txt` also does not replace the domain-root `/robots.txt`; root-wide crawl settings belong to the domain's root site. The project publishes its sitemap URL in page metadata, and the sitemap contains the correct project paths.
+
+## Optional Cloudflare Pages deployment
 
 This is an ordinary static Astro export. **No Cloudflare adapter, Worker, Functions, or database is required.**
 
-1. Review the launch checklist below, then commit/push this source to the intended GitHub repository. This implementation does not commit or push on your behalf.
+1. Review the launch checklist below. The source is already in GitHub; connect the intended repository to Cloudflare if you choose this host.
 2. In Cloudflare, open **Workers & Pages → Create application → Pages → Import an existing Git repository**. Connect the repository and choose the intended production branch.
 3. Set the build command to `npm run build:production`, output directory to `dist`, and root directory to this repository's root. Set `NODE_VERSION` to `24`.
-4. Set production `SITE_URL` to your actual public HTTPS origin, with no path. If you do not yet have a custom domain, use the assigned Pages origin. Do not publish with the local fallback. `build:production` fails rather than accepting a missing HTTPS origin.
+4. Set production `SITE_URL` to your actual public HTTPS origin, with no path, and `BASE_PATH` to `/`. If you do not yet have a custom domain, use the assigned Pages origin. Do not publish with the local fallback. `build:production` fails rather than accepting a missing HTTPS origin.
 5. Configure preview environments separately. If previews should stay out of search, protect them using Cloudflare access settings or a deployment-specific noindex response rule; production metadata alone is not preview access control. Do not set production `SITE_URL` to a temporary preview address.
 6. Deploy. Add the real custom domain in Pages if desired, then set `SITE_URL` to that final origin and rebuild.
 7. Check the homepage, `/learn`, direct loads of article URLs, a missing URL, `/sitemap.xml`, `/robots.txt`, and `/images/social-card.png` on the deployed host. Verify canonicals and social images use the final origin and `_headers` took effect.
@@ -113,11 +135,11 @@ For current requirements, use [Google's European regulations documentation](http
 
 ## Public-launch checklist
 
-- [ ] Supply the real domain or Pages origin; run `npm run build:production` and inspect canonical/sitemap/social URLs.
+- [ ] Confirm the Pages deployment URL; Actions supplies its origin and path automatically. Inspect canonical/sitemap/social URLs on the deployed host.
 - [ ] Review `/privacy`: identify the actual operator and privacy contact, verify host settings and retention, and replace the draft label with approved policy wording. No contact is invented in source.
 - [ ] Keep affiliate/ads disabled until genuine configuration and all required approvals/reviews exist.
 - [ ] Run the verification suite; review mobile and desktop screenshots, keyboard operation, and a real device/screen reader.
-- [ ] Deploy through the owner's authenticated Cloudflare/GitHub accounts and perform the deployed-host checks.
+- [ ] Confirm the Actions deployment succeeds, then perform the deployed-host checks. Cloudflare remains an optional alternative.
 - [ ] Submit the real sitemap to search tools if desired. No ranking or traffic claims are made.
 
 ## Assets and content

@@ -1,4 +1,6 @@
 import { defineConfig, devices } from "@playwright/test";
+import { normalizeBase } from "./src/lib/paths";
+const previewUrl = `http://127.0.0.1:4321${normalizeBase(process.env["BASE_PATH"] || "/")}`;
 export default defineConfig({
   testDir: "./tests/e2e",
   fullyParallel: true,
@@ -14,7 +16,7 @@ export default defineConfig({
   projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
   webServer: {
     command: "npm run preview -- --port 4321",
-    url: "http://127.0.0.1:4321",
+    url: previewUrl,
     reuseExistingServer: !process.env["CI"],
     timeout: 60_000,
   },

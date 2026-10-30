@@ -3,6 +3,7 @@ import { lessons, validateAnswer } from "./lessons";
 import { blankProgress, parseProgress, STORAGE_KEY } from "./progress";
 import { scoreDeal } from "../scopa/scoring";
 import { workedDeal } from "../scopa/scenarios";
+import { href } from "../urls";
 const escape = (text: string): string =>
   text
     .replaceAll("&", "&amp;")
@@ -62,7 +63,7 @@ export function mountTutorial(root: HTMLElement): void {
       '<p class="small">Your table. Your pace.<br>Repeat any lesson whenever you like.</p>';
     if (complete) {
       workspace.innerHTML =
-        '<div class="completion"><span class="completion-symbol" aria-hidden="true">✳</span><p class="eyebrow">Three lessons. A new tradition.</p><h2>A seat at the table is yours.</h2><p>You’ve met the cards, made your first captures, and counted a winning deal. Find a friend, shuffle a deck, and give it a go.</p><div class="hero-actions"><a class="button" href="/rules">Keep the rules handy →</a><a class="text-link" href="/cards">Find your first deck ↗</a></div><p class="small" style="margin-top:24px">Finish scoring at the end of each deal. First to 11 wins; tied leaders play another deal.</p></div>';
+        `<div class="completion"><span class="completion-symbol" aria-hidden="true">✳</span><p class="eyebrow">Three lessons. A new tradition.</p><h2>A seat at the table is yours.</h2><p>You’ve met the cards, made your first captures, and counted a winning deal. Find a friend, shuffle a deck, and give it a go.</p><div class="hero-actions"><a class="button" href="${href('/rules')}">Keep the rules handy →</a><a class="text-link" href="${href('/cards')}">Find your first deck ↗</a></div><p class="small" style="margin-top:24px">Finish scoring at the end of each deal. First to 11 wins; tied leaders play another deal.</p></div>`;
       if (focus) {
         const heading = workspace.querySelector("h2")!;
         heading.tabIndex = -1;

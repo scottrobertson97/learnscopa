@@ -1,5 +1,8 @@
 import { test, expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
+import { normalizeBase, prefixPath } from "../../src/lib/paths";
+const sitePath = (path: string): string =>
+  prefixPath(path, process.env["BASE_PATH"] || "/");
 
 const routes = [
   "/",
@@ -26,7 +29,7 @@ test("all pages render, internal links resolve, metadata is unique and monetizat
   const descriptions = new Set<string>();
   const links = new Set<string>();
   for (const route of routes) {
-    const response = await page.goto(route);
+    const response = await page.goto(sitePath(route));
     expect(response?.status()).toBe(200);
     await expect(page.locator("h1")).toHaveCount(1);
     titles.add(await page.title());
@@ -35,8 +38,15 @@ test("all pages render, internal links resolve, metadata is unique and monetizat
     );
     for (const href of await page
       .locator('a[href^="/"]')
-      .evaluateAll((elements) => elements.map((e) => e.getAttribute("href")!)))
+      .evaluateAll((elements) =>
+        elements.map((e) => e.getAttribute("href")!),
+      )) {
+      expect(
+        href.startsWith(normalizeBase(process.env["BASE_PATH"] || "/")),
+        href,
+      ).toBe(true);
       links.add(href.split("#")[0]!);
+    }
     expect(
       await page
         .locator(
@@ -58,15 +68,63 @@ test("all pages render, internal links resolve, metadata is unique and monetizat
   expect(titles.size).toBe(routes.length);
   expect(descriptions.size).toBe(routes.length);
   expect(errors).toEqual([]);
-  expect((await request.get("/sitemap.xml")).status()).toBe(200);
-  expect((await request.get("/robots.txt")).status()).toBe(200);
-  expect((await request.get("/images/social-card.png")).status()).toBe(200);
+  expect((await request.get(sitePath("/sitemap.xml"))).status()).toBe(200);
+  expect((await request.get(sitePath("/robots.txt"))).status()).toBe(200);
+  expect(
+    (await request.get(sitePath("/images/social-card.png"))).status(),
+  ).toBe(200);
+});
+
+test("deployment paths cover assets, active navigation, canonical URLs, and sitemap", async ({
+  page,
+  request,
+}) => {
+  const responseErrors: string[] = [];
+  page.on("response", (response) => {
+    if (response.status() >= 400) responseErrors.push(response.url());
+  });
+  await page.goto(sitePath("/rules"));
+  await expect(
+    page
+      .getByRole("navigation", { name: "Main navigation", exact: true })
+      .getByRole("link", { name: "The rules", exact: true }),
+  ).toHaveAttribute("aria-current", "page");
+  const assets = await page
+    .locator('script[src], link[rel="stylesheet"], link[rel="icon"]')
+    .evaluateAll((elements) =>
+      elements.map(
+        (element) =>
+          element.getAttribute("src") ?? element.getAttribute("href")!,
+      ),
+    );
+  const base = normalizeBase(process.env["BASE_PATH"] || "/");
+  for (const asset of assets) {
+    expect(asset.startsWith(base), asset).toBe(true);
+    expect((await request.get(asset)).status(), asset).toBe(200);
+  }
+  if (process.env["SITE_URL"]) {
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+      "href",
+      new URL(sitePath("/rules"), process.env["SITE_URL"]).href,
+    );
+    await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
+      "content",
+      new URL(sitePath("/images/social-card.png"), process.env["SITE_URL"])
+        .href,
+    );
+    const sitemap = await (await request.get(sitePath("/sitemap.xml"))).text();
+    for (const route of routes)
+      expect(sitemap).toContain(
+        `<loc>${new URL(sitePath(route), process.env["SITE_URL"]).href}</loc>`,
+      );
+  }
+  expect(responseErrors).toEqual([]);
 });
 
 test("homepage demo explains correct and incorrect captures", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto(sitePath("/"));
   const demo = page.locator("[data-capture-demo]");
   await demo
     .getByRole("button", { name: "3 of clubs, value 3", exact: true })
@@ -102,7 +160,7 @@ for (const width of [390, 1280]) {
     page,
   }) => {
     await page.setViewportSize({ width, height: 950 });
-    await page.goto("/learn");
+    await page.goto(sitePath("/learn"));
     await page.getByLabel("Remember my progress").check();
     for (let i = 0; i < 3; i++) await next(page);
     await page.locator('[data-card-id="cups-4"]').click();
@@ -151,6 +209,10 @@ for (const width of [390, 1280]) {
     await expect(
       page.getByRole("heading", { name: "A seat at the table is yours." }),
     ).toBeVisible();
+    await expect(page.locator(".completion a[href]").first()).toHaveAttribute(
+      "href",
+      sitePath("/rules"),
+    );
     const saved = await page.evaluate(() =>
       JSON.parse(localStorage.getItem("learn-scopa-progress-v1")!),
     );
@@ -175,7 +237,7 @@ for (const width of [390, 1280]) {
 }
 
 test("progress is opt-in, resumes, and can be removed", async ({ page }) => {
-  await page.goto("/learn");
+  await page.goto(sitePath("/learn"));
   await next(page);
   expect(
     await page.evaluate(() => localStorage.getItem("learn-scopa-progress-v1")),
@@ -209,7 +271,7 @@ test("blocked storage does not break lessons", async ({ page }) => {
       },
     });
   });
-  await page.goto("/learn");
+  await page.goto(sitePath("/learn"));
   await expect(
     page.getByRole("heading", { name: "Four families. Forty cards." }),
   ).toBeVisible();
@@ -224,7 +286,7 @@ test("malformed stored progress resets gracefully", async ({ page }) => {
   await page.addInitScript(() => {
     localStorage.setItem("learn-scopa-progress-v1", "{invalid json");
   });
-  await page.goto("/learn");
+  await page.goto(sitePath("/learn"));
   await expect(
     page.getByRole("heading", { name: "Four families. Forty cards." }),
   ).toBeVisible();
@@ -235,7 +297,7 @@ test("malformed stored progress resets gracefully", async ({ page }) => {
 });
 
 test("card exercises work with the keyboard", async ({ page }) => {
-  await page.goto("/learn");
+  await page.goto(sitePath("/learn"));
   await page.locator('[data-lesson="1"]').click();
   const five = page.getByRole("button", {
     name: "5 of cups, value 5",
@@ -261,7 +323,7 @@ for (const width of [320, 390, 768, 1440]) {
   test(`pages fit a ${width}px viewport`, async ({ page }) => {
     await page.setViewportSize({ width, height: 950 });
     for (const route of routes) {
-      await page.goto(route);
+      await page.goto(sitePath(route));
       expect(
         await page.evaluate(
           () => document.documentElement.scrollWidth <= window.innerWidth,
@@ -269,12 +331,12 @@ for (const width of [320, 390, 768, 1440]) {
         route,
       ).toBe(true);
     }
-    await page.goto("/");
+    await page.goto(sitePath("/"));
     await page.screenshot({
       path: `test-results/home-${width}.png`,
       fullPage: true,
     });
-    await page.goto("/learn");
+    await page.goto(sitePath("/learn"));
     await page.locator('[data-lesson="1"]').click();
     await page.screenshot({
       path: `test-results/lesson-${width}.png`,
@@ -299,13 +361,13 @@ test("main pages and a live exercise pass automated WCAG AA checks", async ({
     "/cards",
     "/articles/what-is-the-settebello",
   ]) {
-    await page.goto(route);
+    await page.goto(sitePath(route));
     const result = await new AxeBuilder({ page })
       .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
       .analyze();
     expect(result.violations, route).toEqual([]);
   }
-  await page.goto("/learn");
+  await page.goto(sitePath("/learn"));
   await page.locator('[data-lesson="1"]').click();
   expect(
     (

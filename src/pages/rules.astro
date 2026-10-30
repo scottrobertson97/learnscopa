@@ -1,4 +1,5 @@
 ---
+import { href } from '../lib/urls';
 import GuideLayout from '../layouts/GuideLayout.astro';
 import Card from '../components/cards/Card.astro';
 import AdSlot from '../components/monetization/AdSlot.astro';
@@ -7,7 +8,7 @@ import { card } from '../lib/scopa/deck';
 <GuideLayout title="The rules of Scopa" description="The complete two-player Scopa rules: dealing, mandatory captures, single-card precedence, sweeps, leftovers, scoring, and playing to 11." intro="A small deck, a shared table, and a few rules that soon feel natural. Here’s everything you need for your first two-player game.">
   <h2>Before you pull up a chair</h2>
   <p>You need two players, a place for a row of face-up cards, and a 40-card Italian deck. A paper score sheet helps. Scopa also works with four players in two partnerships; this guide and our lessons use the traditional <strong>two-player game</strong>.</p>
-  <p>Each suit contains Ace, 2, 3, 4, 5, 6, 7, Fante, Cavallo, and Re. Their capturing values are 1 through 10 in that order. The Latin suits are coins, cups, swords, and clubs. No suit is trump. If you only have a regular deck, <a href="/articles/playing-scopa-with-a-regular-deck">remove its 8s, 9s, and 10s</a> and use Jack = 8, Queen = 9, King = 10.</p>
+  <p>Each suit contains Ace, 2, 3, 4, 5, 6, 7, Fante, Cavallo, and Re. Their capturing values are 1 through 10 in that order. The Latin suits are coins, cups, swords, and clubs. No suit is trump. If you only have a regular deck, <a href={href("/articles/playing-scopa-with-a-regular-deck")}>remove its 8s, 9s, and 10s</a> and use Jack = 8, Queen = 9, King = 10.</p>
   <div class="card-example"><Card card={card('coins', 1)} /><Card card={card('clubs', 8)} /><Card card={card('swords', 9)} /><Card card={card('cups', 10)} /><div class="example-copy"><p><strong>Ace = 1 · Fante = 8<br />Cavallo = 9 · Re = 10</strong><br />These are capturing values. Primiera has its own scale.</p></div></div>
   <h2 id="setup">Set the table</h2>
   <ol><li>Choose a dealer. The dealer shuffles, and the other player cuts.</li><li>Deal three cards to each player, one at a time, starting with the non-dealer.</li><li>Place the next four cards face up in the middle. Keep the remaining deck face down as the stock.</li><li>The non-dealer plays first. Players then alternate turns.</li></ol>
@@ -37,7 +38,7 @@ import { card } from '../lib/scopa/deck';
   <p>Now the full 40-card deck is split between the two capture piles. Count the deal, add the points to the running score, and pass the dealer’s role to the other player.</p>
   <h2 id="scoring">Five ways to earn points</h2>
   <table><caption>Standard scoring for each completed deal</caption><thead><tr><th scope="col">Category</th><th scope="col">Point awarded for</th></tr></thead><tbody><tr><th scope="row">Most cards</th><td>1 point for the larger capture pile; no point on a tie.</td></tr><tr><th scope="row">Most coins</th><td>1 point for more captured coins; no point on a tie.</td></tr><tr><th scope="row">Settebello</th><td>1 point for capturing the seven of coins.</td></tr><tr><th scope="row">Primiera</th><td>1 point for the best qualified four-suit prime; no point on a tie.</td></tr><tr><th scope="row">Sweeps</th><td>1 point for each valid scopa.</td></tr></tbody></table>
-  <p>For primiera, choose your best card in each suit using the special values: 7 = 21, 6 = 18, Ace = 16, 5 = 15, 4 = 14, 3 = 13, 2 = 12, and each court card = 10. Add the four values. You must have at least one card from every suit to qualify. <a href="/scoring">See the full primiera table and a worked deal.</a></p>
+  <p>For primiera, choose your best card in each suit using the special values: 7 = 21, 6 = 18, Ace = 16, 5 = 15, 4 = 14, 3 = 13, 2 = 12, and each court card = 10. Add the four values. You must have at least one card from every suit to qualify. <a href={href("/scoring")}>See the full primiera table and a worked deal.</a></p>
   <h2 id="winning">First to eleven</h2>
   <p>Keep playing deals until at least one player has <strong>11 or more total points after scoring a deal</strong>. The higher score wins. If both players reach the target and tie, play another deal to break the tie. Do not stop midway through a deal under these rules.</p>
   <h2>Easy mistakes to leave behind</h2>
@@ -45,5 +46,5 @@ import { card } from '../lib/scopa/deck';
   <h2>A note on family rules</h2>
   <p>Scopa has many regional and household variations. Ace-takes-all, extra points for the king of coins, and coin sequences called napola are examples of additions; they are <strong>not enabled</strong> in these lessons. Agree on variations and a target score before shuffling. A familiar family rule can be valid at that table without being part of this reference game.</p>
   <p class="small">Rules reference: <a href="https://www.pagat.com/fishing/scopa.html">Pagat’s Scopa guide</a>. Our explanations and illustrations are original. Regional deck artwork differs from our teaching deck.</p>
-  <a class="button" href="/learn">Try the rules at the practice table <span aria-hidden="true">→</span></a><AdSlot placement="rules-end" />
+  <a class="button" href={href("/learn")}>Try the rules at the practice table <span aria-hidden="true">→</span></a><AdSlot placement="rules-end" />
 </GuideLayout>

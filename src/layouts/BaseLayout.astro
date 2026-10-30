@@ -1,4 +1,5 @@
 ---
+import { href, routePath, absoluteUrl } from '../lib/urls';
 import '@fontsource/cormorant-garamond/latin-500.css';
 import '@fontsource/cormorant-garamond/latin-600.css';
 import '@fontsource/dm-sans/latin-400.css';
@@ -10,8 +11,8 @@ import { adsEnabled, monetization } from '../config/monetization';
 interface Props { title: string; description: string; article?: boolean; structuredData?: Record<string, unknown>; noindex?: boolean; allowAds?: boolean }
 const { title, description, article = false, structuredData, noindex = false, allowAds = false } = Astro.props;
 const configured = __PUBLIC_SITE_CONFIGURED__;
-const canonical = new URL(Astro.url.pathname, Astro.site);
-const active = Astro.url.pathname.replace(/\/$/, '') || '/';
+const active = routePath(Astro.url.pathname);
+const canonical = absoluteUrl(active, Astro.site);
 ---
 <!doctype html>
 <html lang="en">
@@ -23,38 +24,38 @@ const active = Astro.url.pathname.replace(/\/$/, '') || '/';
     <meta name="description" content={description} />
     {(noindex || !configured) && <meta name="robots" content="noindex, follow" />}
     {configured && <link rel="canonical" href={canonical} />}
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href={href("/favicon.svg")} />
     <meta property="og:title" content={`${title} | ${site.name}`} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content={article ? 'article' : 'website'} />
     <meta property="og:site_name" content={site.name} />
     <meta property="og:locale" content="en_US" />
-    {configured && <><meta property="og:url" content={canonical} /><meta property="og:image" content={new URL('/images/social-card.png', Astro.site)} /><meta name="twitter:image" content={new URL('/images/social-card.png', Astro.site)} /></>}
+    {configured && <><meta property="og:url" content={canonical} /><meta property="og:image" content={absoluteUrl('/images/social-card.png', Astro.site)} /><meta name="twitter:image" content={absoluteUrl('/images/social-card.png', Astro.site)} /></>}
     <meta property="og:image:alt" content="Learn Scopa. A little tradition. A winning hand. Four illustrated Italian suits." />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={`${title} | ${site.name}`} />
     <meta name="twitter:description" content={description} />
-    <link rel="sitemap" href="/sitemap.xml" />
+    <link rel="sitemap" href={href("/sitemap.xml")} />
     {structuredData && <script type="application/ld+json" set:html={JSON.stringify(structuredData).replace(/</g, '\\u003c')} />}
     {allowAds && adsEnabled() && <script is:inline async crossorigin="anonymous" src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${monetization.adsense.publisherId}`}></script>}
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
     <header class="site-header container">
-      <a class="wordmark" href="/" aria-label="learnscopa. home"><span class="brand-mark" aria-hidden="true">✳</span> learn<span>scopa</span><span class="brand-dot" aria-hidden="true">.</span></a>
-      <nav class="desktop-nav" aria-label="Main navigation">{navigation.map(item => <a href={item.href} aria-current={active.startsWith(item.href) ? 'page' : undefined}>{item.label}</a>)}</nav>
-      <a class="header-cta" href="/learn">Pull up a chair <span aria-hidden="true">↗</span></a>
-      <details class="mobile-menu"><summary>Menu <span aria-hidden="true">☰</span></summary><nav aria-label="Mobile navigation">{navigation.map(item => <a href={item.href} aria-current={active.startsWith(item.href) ? 'page' : undefined}>{item.label}</a>)}<a href="/scoring">Scoring guide</a><a href="/about">About us</a></nav></details>
+      <a class="wordmark" href={href("/")} aria-label="learnscopa. home"><span class="brand-mark" aria-hidden="true">✳</span> learn<span>scopa</span><span class="brand-dot" aria-hidden="true">.</span></a>
+      <nav class="desktop-nav" aria-label="Main navigation">{navigation.map(item => <a href={href(item.href)} aria-current={active.startsWith(item.href) ? 'page' : undefined}>{item.label}</a>)}</nav>
+      <a class="header-cta" href={href("/learn")}>Pull up a chair <span aria-hidden="true">↗</span></a>
+      <details class="mobile-menu"><summary>Menu <span aria-hidden="true">☰</span></summary><nav aria-label="Mobile navigation">{navigation.map(item => <a href={href(item.href)} aria-current={active.startsWith(item.href) ? 'page' : undefined}>{item.label}</a>)}<a href={href("/scoring")}>Scoring guide</a><a href={href("/about")}>About us</a></nav></details>
     </header>
     <main id="main"><slot /></main>
     <footer class="site-footer">
       <div class="container footer-grid">
-        <div><a class="wordmark" href="/"><span class="brand-mark" aria-hidden="true">✳</span> learn<span>scopa</span>.</a><p>A game for the table.<br />A tradition for everyone.</p><p class="small">Made for the next generation of Scopa players.</p></div>
-        <nav aria-label="Learn"><p class="eyebrow">Take a seat</p><a href="/learn">Interactive lessons</a><a href="/rules">Complete rules</a><a href="/scoring">Scoring guide</a></nav>
-        <nav aria-label="Explore"><p class="eyebrow">Stay curious</p><a href="/cards">Italian playing cards</a><a href="/articles">Field notes</a><a href="/about">About Learn Scopa</a></nav>
+        <div><a class="wordmark" href={href("/")}><span class="brand-mark" aria-hidden="true">✳</span> learn<span>scopa</span>.</a><p>A game for the table.<br />A tradition for everyone.</p><p class="small">Made for the next generation of Scopa players.</p></div>
+        <nav aria-label="Learn"><p class="eyebrow">Take a seat</p><a href={href("/learn")}>Interactive lessons</a><a href={href("/rules")}>Complete rules</a><a href={href("/scoring")}>Scoring guide</a></nav>
+        <nav aria-label="Explore"><p class="eyebrow">Stay curious</p><a href={href("/cards")}>Italian playing cards</a><a href={href("/articles")}>Field notes</a><a href={href("/about")}>About Learn Scopa</a></nav>
         <div class="footer-note"><span class="footer-suits" aria-hidden="true">◉ ∪ ⚔ ❧</span><p>No account. No download.<br />Just you, the cards, and a good place to start.</p></div>
       </div>
-      <div class="container footer-bottom"><span>© {new Date().getUTCFullYear()} Learn Scopa</span><a href="/privacy">Privacy & local storage</a><span>40 cards. Countless good evenings.</span></div>
+      <div class="container footer-bottom"><span>© {new Date().getUTCFullYear()} Learn Scopa</span><a href={href("/privacy")}>Privacy & local storage</a><span>40 cards. Countless good evenings.</span></div>
       {monetization.affiliate.enabled && <p class="container disclosure">{monetization.affiliate.disclosure}</p>}
     </footer>
   </body>

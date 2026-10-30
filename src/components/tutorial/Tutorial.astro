@@ -1,8 +1,11 @@
+---
+import { href } from '../../lib/urls';
+---
 <div class="tutorial-shell container" data-tutorial>
-  <aside><nav class="lesson-menu" aria-label="Choose a lesson" data-lesson-menu></nav><div class="storage-controls"><label><input type="checkbox" data-save-progress /> Remember my progress</label><a href="/privacy#local-progress">Stored on this device only</a><p data-storage-status role="status"></p></div></aside>
+  <aside><nav class="lesson-menu" aria-label="Choose a lesson" data-lesson-menu></nav><div class="storage-controls"><label><input type="checkbox" data-save-progress /> Remember my progress</label><a href={href("/privacy#local-progress")}>Stored on this device only</a><p data-storage-status role="status"></p></div></aside>
   <div class="lesson-workspace" data-lesson-workspace><p>Setting the table…</p></div>
 </div>
-<noscript><div class="container callout"><p>These hands-on lessons need JavaScript. You can still learn every rule in our <a href="/rules">complete illustrated guide</a> and <a href="/scoring">scoring guide</a>.</p></div></noscript>
+<noscript><div class="container callout"><p>These hands-on lessons need JavaScript. You can still learn every rule in our <a href={href("/rules")}>complete illustrated guide</a> and <a href={href("/scoring")}>scoring guide</a>.</p></div></noscript>
 <script>
   import { mountTutorial } from '../../lib/tutorial/ui';
   const root = document.querySelector<HTMLElement>('[data-tutorial]');

@@ -1,10 +1,10 @@
 # Next steps
 
-## Owner actions before public launch
+## Owner follow-up
 
-- Choose the actual public origin and configure `SITE_URL` in Cloudflare Pages.
+- Confirm the GitHub Actions publication at `https://scottrobertson.net/learnscopa/`. The workflow reads the origin and project path from existing Pages settings.
 - Review and approve the privacy draft, including operator identity, working privacy contact, and actual hosting practices.
-- Push through the intended GitHub account and connect Cloudflare Pages. No credentials, domain, affiliate ID, or publisher ID are supplied by this project.
+- Use the README's optional Cloudflare instructions only if choosing a different host. No affiliate ID or publisher ID is supplied by this project.
 - Perform a real-device and screen-reader review, then verify direct routes, metadata, response headers, and tutorial completion on the deployed host.
 - Enable monetization only after obtaining the real accounts, checked product links, publisher approvals, and any required consent integration. See README.
 

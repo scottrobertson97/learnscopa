@@ -18,6 +18,7 @@
     "verify": "npm run check && npm test && npm run build && npm run test:e2e"
   },
   "dependencies": {
+    "@astrojs/markdown-satteri": "^0.4.6",
     "@fontsource/cormorant-garamond": "^5.3.0",
     "@fontsource/dm-sans": "^5.3.0",
     "astro": "^7.4.4"
