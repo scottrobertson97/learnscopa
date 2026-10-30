@@ -5,9 +5,9 @@
 - Check Google's pending AdSense site review for `learnscopa.com`. The domain is live, ownership is verified, and review was requested on October 30, 2026. Complete real ad units and consent management before enabling ads; see `ADSENSE_SETUP.md`.
 - Future pushes deploy through GitHub Actions to `https://learnscopa.com/`. The workflow reads the origin and root path from Pages settings.
 - Review and approve the privacy draft, including operator identity, working privacy contact, and actual hosting practices.
-- Use the README's optional Cloudflare instructions only if choosing a different host. The owner-supplied AdSense publisher ID is configured; affiliate links remain unconfigured.
+- Use the README's optional Cloudflare instructions only if choosing a different host. The owner-supplied AdSense publisher ID is configured; Amazon deck links use the owner-supplied `learnscopa-20` tracking ID.
 - Perform a real-device and screen-reader review, then verify direct routes, metadata, response headers, and tutorial completion on the deployed host.
-- Enable monetization only after obtaining the real accounts, checked product links, publisher approvals, and any required consent integration. See README.
+- Keep Amazon recommendations and the declared Associates website current. Display ads still require Google's site approval and the real consent integration. See README.
 
 ## Full playable Scopa
 

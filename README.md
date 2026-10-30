@@ -29,7 +29,7 @@ Without a configured public origin, builds are deliberately **noindex**, robots 
 - Five substantial original articles through Astro Content Collections, with related reading and Article JSON-LD.
 - All 40 original illustrated cards: four suits, Ace–7, Fante, Cavallo, Re. Shared SVG rendering for static pages and exercises; face-down, selected, highlighted, disabled, and button states.
 - Unique metadata, configurable canonical and social URLs, local sharing artwork, sitemap, robots, 404, self-hosted fonts, and Cloudflare static response headers.
-- Centralized, disabled-by-default affiliate and AdSense integration points.
+- Centralized Amazon affiliate recommendations using the owner's `learnscopa-20` tag; AdSense serving remains disabled.
 
 ## Architecture
 
@@ -69,7 +69,7 @@ npm run test:e2e
 
 `npm run verify` runs the check, unit tests, build, and browser suite in order. Playwright starts an Astro preview on strict port 4321 when needed. On Linux CI, install the browser's OS dependencies with `npx playwright install --with-deps chromium`. GitHub Actions runs these checks and deploys the verified artifact on pushes to `main`; pull requests run checks without publishing.
 
-The browser suite completes all three lessons at mobile and desktop sizes, rejects an illegal sum, uses keyboard selection, verifies persistence/removal/restart and blocked/corrupt storage, checks internal links and inactive monetization, scans WCAG A/AA rules with axe, and checks layouts at 320, 390, 768, and 1440 pixels. Screenshots and traces go into ignored `test-results/`; reports into `playwright-report/`. Automated scans supplement human keyboard, screen-reader, and device review; they are not a certification of accessibility.
+The browser suite completes all three lessons at mobile and desktop sizes, rejects an illegal sum, uses keyboard selection, verifies persistence/removal/restart and blocked/corrupt storage, checks internal links, paid-link disclosures and Amazon tags, confirms display ads stay disabled, scans WCAG A/AA rules with axe, and checks layouts at 320, 390, 768, and 1440 pixels. Screenshots and traces go into ignored `test-results/`; reports into `playwright-report/`. Automated scans supplement human keyboard, screen-reader, and device review; they are not a certification of accessibility.
 
 ## GitHub Pages deployment through Actions
 
@@ -109,16 +109,20 @@ This is an ordinary static Astro export. **No Cloudflare adapter, Worker, Functi
 
 The installed dependency versions are pinned by `package-lock.json`. Cloudflare should use `npm ci`. See the [official Cloudflare Astro guide](https://developers.cloudflare.com/pages/framework-guides/deploy-an-astro-site/) for current dashboard details. If you use a different CI build command, retain the public-origin guard.
 
-## Amazon Associates: activation
+## Amazon Associates
 
-Edit `src/config/monetization.ts`. Recommendations start as **deck categories**, with original buying advice, not unverified product endorsements. No fake buttons, IDs, images, prices, ratings, or availability claims are rendered.
+Affiliate links are enabled in `src/config/monetization.ts` with the owner-supplied **`learnscopa-20`** tracking ID. The `/cards/` guide links to two checked Amazon.com listings:
 
-1. Obtain your own approved Amazon Associates account and verified product URLs.
-2. Replace each category with accurate, checked product metadata; set its `affiliateUrl` to your genuine HTTPS affiliate link. The helper accepts Amazon marketplace hosts and `amzn.to`, rejects unrelated domains, and renders nothing if the URL is missing or invalid.
-3. Set `affiliate.enabled` to `true` and rebuild. The required statement, **“As an Amazon Associate I earn from qualifying purchases.”**, then appears adjacent to each configured purchase link and in the footer. Links use `sponsored nofollow noopener` and disclose the new tab.
-4. Review current program requirements and the wording on every linked recommendation. Update `/privacy` for the resulting behavior. No product information is fetched or scraped from Amazon.
+| Recommendation | ASIN | Listing checked |
+| --- | --- | --- |
+| Modiano Napoletane 97/25 | `B001KPU996` | October 30, 2026 |
+| Modiano Sicilian Scopa playing cards | `B000FH6GZQ` | October 30, 2026 |
 
-The owner must supply the real account and links. This source does not fabricate either. The optional `image` field supports `src`, `alt`, `width`, `height`, and a visible `licenseNote`; provide it only with suitable usage rights. The initial recommendations use text rather than unlicensed product images.
+The title and Neapolitan card count were checked on the Amazon product pages; Modiano's [regional-card catalogue](https://www.modiano.it/en/products/regional-cards/) documents the 40-card Sicilian pattern. Recommendations use original explanatory text, without copied seller images, prices, ratings, reviews, or availability claims. We have not personally tested these decks. Recheck listing identities before changing the recommendations.
+
+Each direct product URL includes `?tag=learnscopa-20`. **“Paid link. As an Amazon Associate I earn from qualifying purchases.”** appears beside each purchase button; the required Associates statement also appears in the footer. Links use `sponsored nofollow noopener` and disclose the new tab. Reading a recommendation makes no Amazon request; the implementation uses ordinary outbound links without widgets or tracking pixels. The privacy page describes the active links, while its operator/contact details still require owner completion.
+
+Maintain the declared website in the owner's Associates account and follow [Amazon's program policies](https://affiliate-program.amazon.com/help/operating/policies) and [disclosure guidance](https://affiliate-program.amazon.com/help/node/topic/GPXFHVYZMTGPUMPE). Enrollment permits Special Links while application review is pending; final acceptance and commissions are controlled by Amazon. To replace a deck, verify the listing, set its genuine HTTPS `affiliateUrl` and accurate metadata, then rebuild and test. Setting `affiliate.enabled` to `false` removes the shopping links and disclosures. The optional `image` field supports `src`, `alt`, `width`, `height`, and a visible `licenseNote`; provide it only with suitable usage rights.
 
 ## AdSense: prepared, disabled
 

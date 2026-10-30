@@ -11,5 +11,5 @@ const url = affiliateLink(product);
   <h3>{product.name}</h3>
   <p>{product.description}</p>
   <p class="small"><strong>Why choose it?</strong> {product.usefulness}</p>
-  {url && <><p class="disclosure">{monetization.affiliate.disclosure}</p><a class="button button-outline" href={url} rel="sponsored nofollow noopener" target="_blank">View on Amazon <span aria-hidden="true">↗</span><span class="sr-only"> (opens in a new tab)</span></a></>}
+  {url && <><p class="disclosure"><strong>Paid link.</strong> {monetization.affiliate.disclosure}</p><a class="button button-outline" href={url} rel="sponsored nofollow noopener" target="_blank">View on Amazon <span aria-hidden="true">↗</span><span class="sr-only"> (opens in a new tab)</span></a></>}
 </article>

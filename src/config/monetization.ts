@@ -29,27 +29,29 @@ export const monetization: {
   adsense: AdsenseConfig;
 } = {
   affiliate: {
-    enabled: false,
+    enabled: true,
     disclosure: "As an Amazon Associate I earn from qualifying purchases.",
-    // Buying categories, not endorsements of unverified listings. Replace with verified products before linking.
+    // Listing identities checked October 30, 2026. Do not add scraped prices, ratings, or seller images.
     products: [
       {
         id: "napoletane",
-        name: "A Neapolitan-pattern deck",
+        name: "Modiano Napoletane 97/25",
         deckType: "Napoletane · 40 cards",
         description:
-          "A familiar southern Italian pattern with coins, cups, swords, and clubs. Look for a complete 40-card pack.",
+          "A Neapolitan-pattern deck with the coins, cups, swords, and clubs used in our lessons. The linked listing is for one 40-card deck.",
         usefulness:
-          "An approachable starting point if you want the Latin suits used in our lessons.",
+          "Choose this pattern if you want to begin with the southern Italian suits introduced in the tutorial.",
+        affiliateUrl: "https://www.amazon.com/dp/B001KPU996?tag=learnscopa-20",
       },
       {
         id: "siciliane",
-        name: "A Sicilian-pattern deck",
+        name: "Modiano Sicilian Scopa playing cards",
         deckType: "Siciliane · 40 cards",
         description:
-          "A distinct regional take on the same four Latin suits and ten ranks. Check the listing for the Sicilian pattern and card count.",
+          "A Sicilian-pattern deck for Scopa, with the same four Latin suits and ten ranks per suit. Its illustrations offer another regional way to read the cards.",
         usefulness:
-          "A good choice if you enjoy discovering how the same game looks around Italy.",
+          "Choose this pattern if Sicilian cards are familiar to your family, or you would like to explore a different regional design.",
+        affiliateUrl: "https://www.amazon.com/dp/B000FH6GZQ?tag=learnscopa-20",
       },
     ],
   },

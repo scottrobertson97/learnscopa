@@ -20,7 +20,7 @@ const routes = [
   "/articles/traditional-italian-playing-cards-explained",
   "/articles/playing-scopa-with-a-regular-deck",
 ];
-test("all pages render, internal links resolve, metadata is unique and monetization is disabled", async ({
+test("all pages render, internal links resolve, metadata is unique and display ads stay disabled", async ({
   page,
   request,
 }) => {
@@ -51,10 +51,13 @@ test("all pages render, internal links resolve, metadata is unique and monetizat
     expect(
       await page
         .locator(
-          'script[src*="googlesyndication"], .adsbygoogle, a[rel~="sponsored"]',
+          'script[src*="googlesyndication"], .adsbygoogle',
         )
         .count(),
     ).toBe(0);
+    await expect(page.locator('a[rel~="sponsored"]')).toHaveCount(
+      route === "/cards" ? 2 : 0,
+    );
     if (route.startsWith("/articles/"))
       expect(
         JSON.parse(
@@ -74,6 +77,36 @@ test("all pages render, internal links resolve, metadata is unique and monetizat
   expect(
     (await request.get(sitePath("/images/social-card.png"))).status(),
   ).toBe(200);
+});
+
+test("card recommendations disclose paid links and use the owner's Amazon tracking ID", async ({ page }) => {
+  const amazonRequests: string[] = [];
+  page.on("request", request => {
+    if (/(^|\.)(amazon\.com|amazon-adsystem\.com)$/.test(new URL(request.url()).hostname)) {
+      amazonRequests.push(request.url());
+    }
+  });
+  await page.goto(sitePath("/cards"));
+  const recommendations = page.locator(".product-recommendation");
+  await expect(recommendations).toHaveCount(2);
+  const expectedAsins = ["B001KPU996", "B000FH6GZQ"];
+  for (let index = 0; index < expectedAsins.length; index++) {
+    const recommendation = recommendations.nth(index);
+    await expect(recommendation.locator(".disclosure")).toHaveText(
+      "Paid link. As an Amazon Associate I earn from qualifying purchases.",
+    );
+    const link = recommendation.getByRole("link", { name: "View on Amazon (opens in a new tab)" });
+    await expect(link).toHaveAttribute("href", `https://www.amazon.com/dp/${expectedAsins[index]}?tag=learnscopa-20`);
+    await expect(link).toHaveAttribute("rel", "sponsored nofollow noopener");
+    await expect(link).toHaveAttribute("target", "_blank");
+  }
+  await expect(page.locator("footer .disclosure")).toHaveText(
+    "As an Amazon Associate I earn from qualifying purchases.",
+  );
+  expect(amazonRequests).toEqual([]);
+  await page.goto(sitePath("/privacy"));
+  await expect(page.getByRole("heading", { name: "External links and Amazon affiliate recommendations" })).toBeVisible();
+  await expect(page.locator("main")).toContainText("learnscopa-20");
 });
 
 test("deployment paths cover assets, active navigation, canonical URLs, and sitemap", async ({

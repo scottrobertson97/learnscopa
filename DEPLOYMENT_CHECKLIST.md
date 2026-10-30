@@ -12,7 +12,7 @@ The custom-domain cutover is complete; [CUSTOM_DOMAIN.md](CUSTOM_DOMAIN.md) reco
 - Only a verified `dist` artifact can reach the `deploy` job and `github-pages` environment.
 - Pull requests run verification without publishing. Publishing uses the repository's `GITHUB_TOKEN`/OIDC, with no external host token.
 - Confirm both jobs pass and inspect the environment URL. Check `/learn/`, an article, assets, navigation, and sitemap on the live host.
-- Review the privacy draft and provide owner/operator contact information. Affiliate links and ads remain disabled.
+- Review the privacy draft and provide owner/operator contact information. Amazon deck links are enabled using `learnscopa-20`; display ads remain disabled.
 
 The custom domain serves this project's `/robots.txt` and `/ads.txt` at its root. GitHub Pages does not interpret the Cloudflare `_headers` file. No custom domain or other project settings are changed by this workflow.
 
